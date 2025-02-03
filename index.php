@@ -145,7 +145,7 @@
 
         function editDetails() {
             var personId = document.getElementById('personId').value;
-            fetch('getDetails.php?id=' + personId)
+            fetch('handlers/get_details.php?id=' + personId)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('fname').value = data.fname;

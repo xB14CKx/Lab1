@@ -15,9 +15,6 @@ try{
     return;
   }
 
-  // echo "database connection success";
-
-
 }catch(\Exception $e){
   echo "Error: ".$e;
 }
