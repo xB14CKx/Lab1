@@ -1,21 +1,32 @@
 <?php
 include '../database/database.php';
 
-$id = $_GET['id'];
+header('Content-Type: application/json'); 
 
-$sql = "SELECT fname, mname, lname, email, city, bgry FROM persons WHERE id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
+try {
+    if ($_SERVER['REQUEST_METHOD'] === "GET" && isset($_GET['name'])) {
+        $name = trim($_GET['name']);
 
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    echo json_encode($row);
-} else {
-    echo json_encode([]);
+        // Prepare the statement
+        $stmt = $conn->prepare("SELECT * FROM information WHERE fname = ?");
+        $stmt->bind_param("s", $name);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+
+        if ($data) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(['error' => 'No record found']);
+        }
+
+        $stmt->close();
+    } else {
+        echo json_encode(['error' => 'Invalid request']);
+    }
+} catch (Exception $e) {
+    echo json_encode(['error' => $e->getMessage()]);
 }
 
-$stmt->close();
 $conn->close();
 ?>

@@ -1,37 +1,23 @@
 <?php
-
-include "../database/database.php";
+include '../database/database.php';
 
 try {
-
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
+        $fname = $_POST['fname'];
+        $mname = $_POST['mname'];
+        $lname = $_POST['lname'];
+        $email = $_POST['email'];
+        $city = $_POST['city'];
+        $bgry = $_POST['bgry'];
 
-        $editName = $_POST['editName'];
-
-        $stmt = $conn->prepare("SELECT * FROM information WHERE fname = ? OR lname = ?");
-        $stmt->bind_param("ss", $editName, $editName);
+        $stmt = $conn->prepare("UPDATE information SET mname = ?, lname = ?, email = ?, city = ?, bgry = ? WHERE fname = ?");
+        $stmt->bind_param("ssssss", $mname, $lname, $email, $city, $bgry, $fname);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $data = $result->fetch_assoc();
-
-        if ($data) {
-            echo "<script>
-                document.getElementById('fname').value = '{$data['fname']}';
-                document.getElementById('mname').value = '{$data['mname']}';
-                document.getElementById('lname').value = '{$data['lname']}';
-                document.getElementById('email').value = '{$data['email']}';
-                document.getElementById('city').value = '{$data['city']}';
-                document.getElementById('bgry').value = '{$data['bgry']}';
-            </script>";
-        } else {
-            header("Location: ../index.php?error=No record found");
-            exit;
-        }
 
     }
-
 } catch (\Exception $e) {
-    echo "Error: " . $e->getMessage();
+    echo json_encode(['error' => $e->getMessage()]);
 }
 
+$conn->close();
 ?>
