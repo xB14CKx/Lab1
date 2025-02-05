@@ -8,7 +8,6 @@
     <title>Detailing</title>
     <link rel="stylesheet" href="statics/css/bootstrap.css">
     <script src="statics/js/bootstrap.bundle.js"></script>
-
 </head>
 
 <body>
@@ -133,7 +132,6 @@
         </div>
     </div>
 
-
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -151,7 +149,6 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-danger" onclick="showDeleteConfirmModal()">Delete</button>
-
                     </div>
                 </form>
             </div>
@@ -176,7 +173,6 @@
             </div>
         </div>
     </div>
-
 
     <script>
         function validateAndShowModal() {
@@ -269,9 +265,17 @@
             }
 
             setTimeout(() => {
-                window.location.href = "index.php";
+                var formData = new FormData(document.getElementById('infoForm'));
+                fetch('handlers/edit_info_handler.php', {
+                    method: 'POST',
+                    body: formData
+                }).then(() => {
+                    document.getElementById('infoForm').reset();
+                    window.location.reload();
+                });
             }, 300);
         }
+
 
         function showDeleteConfirmModal() {
             var deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
@@ -279,18 +283,14 @@
         }
 
         function confirmDelete() {
-            // Close the confirmation modal first
             var deleteConfirmModal = bootstrap.Modal.getInstance(document.getElementById('deleteConfirmModal'));
             if (deleteConfirmModal) {
                 deleteConfirmModal.hide();
             }
-
-            // Submit the delete form
             setTimeout(() => {
                 document.querySelector("#deleteModal form").submit();
-            }, 300); // Delay ensures smooth closing of modal before submission
+            }, 300);
         }
-
     </script>
 </body>
 
